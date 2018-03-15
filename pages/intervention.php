@@ -16,12 +16,12 @@ include '../php/Db.php';
     $Hotel=$_POST['hotel'];
     $Autre=$_POST['autre'];
 
-
-    $req = $bdd->prepare('INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail, Kms_aller, Repas, Peage, Hotel, Autre) VALUES (:Id_foyer, :curdate, :Id_type_install, :Detail, :Kms_aller, :Repas, :Peage, :Hotel, :Autre )');
+    $req = $bdd->prepare('INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail, Kms_aller, Repas, Peage, Hotel, Autre) VALUES (:Id_foyer, :curdate, :Id_type_install, :Id_type, :Detail, :Kms_aller, :Repas, :Peage, :Hotel, :Autre )');
     $req->execute(array(
         'Id_foyer' => $Id_foyer,
         'curdate' => $Current_date,
         'Id_type_install' => '2',
+        'Id_type' => 0,
         'Detail' => $Detail,
         'Kms_aller' => $Kms_aller,
         'Repas' => $Repas,
