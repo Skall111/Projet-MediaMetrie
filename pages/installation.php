@@ -1,11 +1,24 @@
 <?php
 session_start(); // J'évite de perdre les données en changeant de page sur la même session
-echo $_SESSION['id'];// Afficher l'ID de l'ambassadeur
-echo $_SESSION['prenom_amba'];// Afficher le prénom de l'ambassaeur
-var_dump($_POST);
+//echo $_SESSION['id'];// Afficher l'ID de l'ambassadeur
+//echo $_SESSION['prenom_amba'];// Afficher le prénom de l'ambassaeur
+//var_dump($_POST);
+include '../php/Db.php';
+if(isset($_GET['supp'])){
+    $req = $bdd->prepare('DELETE FROM facture  WHERE Id_foyer = :Id_foyer LIMIT 1 ');
+    $req->execute(array(
+        'Id_foyer' => $_GET['supp'])) ;
+
+    $req = $bdd->prepare('DELETE FROM details  WHERE Id_foyer = :Id_foyer LIMIT 1 ');
+    $req->execute(array(
+        'Id_foyer' => $_GET['supp'])) ;
+
+header('Location: installation.php');
+exit();
+}
+
 if (isset ($_POST) && !empty($_POST))
 {
-include '../php/Db.php';
 // Insertion
 $Id_foyer=$_POST['foyer'];
 $Current_date=$_POST['date'];
@@ -30,10 +43,19 @@ $req->execute(array(
     'Peage' => $Peage,
     'Hotel' => $Hotel,
     'Autre' => $Autre)) ;
+// La table facture sert a avoir tout tes trucs en rapide et la table detail sert a avoir le detail de tes factures
+    // Donc il faut que tu enregistre dans les 2 ta tables ;
+    $req = $bdd->prepare('INSERT INTO facture (Id_foyer, Id_date, Id_type_inter) VALUES (:Id_foyer, :curdate, :Id_type_inter )');
+    $req->execute(array(
+        'Id_foyer' => $Id_foyer,
+        'curdate' => $Current_date,
+        'Id_type_inter' => '1')) ;
 
 
 }
-
+// je prend tout de detail en les rangé pas ordre decroissant par Id_date
+$reqListe = $bdd->query("SELECT * FROM details ORDER BY Id_date DESC") ;
+$liste = $reqListe->fetchAll() ;
 // jte le fais pour l'example mais le mot de passe ne sert a rien d'etre stocker
 //VOILA ?
 // ouaip du coup je vais enlever le pass mdr
@@ -54,7 +76,7 @@ $req->execute(array(
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Bootstrap Admin Theme</title>
+    <title>Installation</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -273,80 +295,59 @@ $req->execute(array(
                     <th>Date d'intervention</th>
                     <th>Nbrs de KM aller parcourus</th>
                     <th>Forfait</th>
+                    <th>Kms aller</th>
                     <th>Nombres de Postes</th>
                     <th>Repas</th>
                     <th>Péages</th>
                     <th>Hotels</th>
                     <th>Autres types de frais</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="odd gradeX">
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Win 95+</td>
-                    <td class="center">4</td>
-                    <td class="center">X</td>
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Win 95+</td>
-                </tr>
-                <tr class="even gradeC">
-                    <td>Trident</td>
-                    <td>Internet Explorer 5.0</td>
-                    <td>Win 95+</td>
-                    <td class="center">5</td>
-                    <td class="center">C</td>
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Win 95+</td>
-                </tr>
-                <tr class="odd gradeA">
-                    <td>Trident</td>
-                    <td>Internet Explorer 5.5</td>
-                    <td>Win 95+</td>
-                    <td class="center">5.5</td>
-                    <td class="center">A</td>
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Win 95+</td>
-                </tr>
-                <tr class="even gradeA">
-                    <td>Trident</td>
-                    <td>Internet Explorer 6</td>
-                    <td>Win 98+</td>
-                    <td class="center">6</td>
-                    <td class="center">A</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Win 95+</td>
-                </tr>
-                <tr class="odd gradeA">
-                    <td>Trident</td>
-                    <td>Internet Explorer 7</td>
-                    <td>Win XP SP2+</td>
-                    <td class="center">7</td>
-                    <td class="center">A</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Win 95+</td>
-                </tr>
-                <tr class="even gradeA">
-                    <td>Trident</td>
-                    <td>AOL browser (AOL desktop)</td>
-                    <td>Win XP</td>
-                    <td class="center">6</td>
-                    <td class="center">A</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Trident</td>
-                    <td>Internet Explorer 4.0</td>
-                    <td>Win 95+</td>
-                </tr>
+                <?php
+                foreach ( $liste as $item ) {
+                ?>
+                    <tr class="odd gradeX">
+                        <td><?php echo $item['Id_foyer'] ; ?></td>
+                        <td><?php echo $item['Id_date'] ; ?></td>
+                        <td>
+                            <?php
+                                if($item['Id_type_install'] == "1"){
+                                    echo "Installation" ;
+                                }else{
+                                    echo "Intervention" ;
+                                }
+
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            if($item['Id_type'] == "1"){
+                                echo "Web - Démo" ;
+                            }else{
+                                echo "Démo" ;
+                            }
+
+                            ?>
+                        </td>
+                        <td><?php echo $item['Kms_aller'] ; ?></td>
+                        <td><?php echo $item['Detail'] ; ?></td>
+                        <td><?php echo $item['Repas'] ; ?></td>
+                        <td><?php echo $item['Peage'] ; ?></td>
+                        <td><?php echo $item['Hotel'] ; ?></td>
+                        <td><?php echo $item['Autre'] ; ?></td>
+                        <td><i class="fa fa-trash" onclick="document.location.href = 'installation.php?supp=<?php echo $item['Id_foyer'] ;  ?>' "></i></td>
+
+
+
+
+
+                    </tr>
+                <?php
+                }
+                ?>
+
                 </tbody>
             </table>
         </div>
