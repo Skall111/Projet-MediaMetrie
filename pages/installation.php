@@ -54,7 +54,7 @@ $req->execute(array(
 
 }
 // je prend tout de detail en les rangé pas ordre decroissant par Id_date
-$reqListe = $bdd->query("SELECT * FROM details ORDER BY Id_date DESC") ;
+$reqListe = $bdd->query("SELECT * FROM details  WHERE Id_type_install = '1' ORDER BY Id_date DESC") ;
 $liste = $reqListe->fetchAll() ;
 // jte le fais pour l'example mais le mot de passe ne sert a rien d'etre stocker
 //VOILA ?
