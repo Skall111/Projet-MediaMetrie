@@ -1,0 +1,47 @@
+<span class=“btn btn-success fileinput-button” id=“Add”>
+                                                   <i class=“fa fa-plus”></i>
+                                                   <span>Ajouter un fichier</span>
+                                                   <input id=“files” type=“file” name=“fichier” value=“”>
+
+                                               </span>
+
+<input class=“btn btn-success” type=“hidden” name=“upload” value=“Envoyer Le Fichier”>
+<button type=“submit” class=“btn btn-primary start” id=“Tel” style=“display:none;” >
+    <i class=“fa fa-upload”></i>
+    <span>Télécharger</span>
+</button>
+<button type=“button” class=“btn btn-danger delete” id=“Del” style=“display:none;“>
+    <i class=“glyphicon glyphicon-trash”></i>
+    <span>Supprimer</span>
+</button>
+
+
+
+
+<?php echo $_SESSION['prenom_amba']; ?> // permet d'afficher le prenom de l'amba connecté
+
+
+
+
+
+
+
+
+form input {
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+outline: 0;
+border: 1px solid rgba(255, 255, 255, 0.4);
+background-color: rgba(255, 255, 255, 0.2);
+width: 250px;
+border-radius: 3px;
+padding: 10px 15px;
+margin: 0 auto 10px auto;
+display: block;
+text-align: center;
+font-size: 18px;
+color: white;
+-webkit-transition-duration: 0.25s;
+transition-duration: 0.25s;
+font-weight: 300;
