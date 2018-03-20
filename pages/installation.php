@@ -99,6 +99,46 @@ if (isset ($_POST) && !empty($_POST)) {
         echo "Impossible de copier le fichier dans" . $directory;
     } else {
         echo "Le fichier a bien été uploader";
+
+
+    $file = $_FILES['fiche_repas']['tmp_name'];
+    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+            mkdir($directory . $Id_foyer);
+        }
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '/repas.jpg')) {
+            echo "Impossible de copier le fichier dans" . $directory;
+    } else {
+            echo "Le fichier a bien été uploader";
+
+
+    $file = $_FILES['fiche_peage']['tmp_name'];
+    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+                mkdir($directory . $Id_foyer);
+    }
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '/peage.jpg')) {
+        echo "Impossible de copier le fichier dans" . $directory;
+    } else {
+        echo "Le fichier a bien été uploader";
+
+
+    $file = $_FILES['fiche_hotel']['tmp_name'];
+    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+            mkdir($directory . $Id_foyer);
+        }
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '/hotel.jpg')) {
+            echo "Impossible de copier le fichier dans" . $directory;
+    } else {
+            echo "Le fichier a bien été uploader";
+
+    $file = $_FILES['fiche_autre']['tmp_name'];
+    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+            mkdir($directory . $Id_foyer);
+        }
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '/hotel.jpg')) {
+            echo "Impossible de copier le fichier dans" . $directory;
+    } else {
+            echo "Le fichier a bien été uploader";
+
         $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
                                         VALUES (:Id_foyer, :curdate , :Id_type_inter , 1 , :Id_foyer , :Name_files , :Files_chemin) ');
         $req->execute(array(
@@ -286,7 +326,7 @@ foreach ($liste as $key => $value) {
                                         <input type="text" class="form-control" id="concept"
                                                name="repas">
                                         <span>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                        <input type="file" class="form-control-file" id="fiche_repas">
                                 </span>
                                     </div>
                                 </div>
@@ -298,7 +338,7 @@ foreach ($liste as $key => $value) {
                                         <input type="text" class="form-control" id="peage"
                                                name="peage">
                                         <span>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                        <input type="file" class="form-control-file" id="fiche_peage">
                                 </span>
                                     </div>
 
@@ -311,7 +351,7 @@ foreach ($liste as $key => $value) {
                                         <input type="text" class="form-control" id="hotel"
                                                name="hotel">
                                         <span>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                        <input type="file" class="form-control-file" id="fiche_hotel">
                                 </span>
                                     </div>
                                 </div>
@@ -323,7 +363,7 @@ foreach ($liste as $key => $value) {
                                         <input type="text" class="form-control" id="autre"
                                                name="autre">
                                         <span>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                        <input type="file" class="form-control-file" id="fiche_autre">
                                 </span>
                                     </div>
                                 </div>

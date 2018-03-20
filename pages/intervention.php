@@ -31,6 +31,27 @@ if (isset ($_POST) && !empty($_POST)) // ne garde pas en mémoire ce qu'il ya da
     $Hotel=$_POST['hotel'];
     $Autre=$_POST['autre'];
 
+    $string_req = 'INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
+                VALUES (:Id_foyer, :curdate, :Id_type_install, 3, :Detail) ; 
+                INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
+                VALUES (:Id_foyer, :curdate, :Id_type_install, 1, :Kms_aller) ; 
+                INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
+                VALUES (:Id_foyer, :curdate, :Id_type_install, 2, :Detail) ; 
+                INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
+                VALUES (:Id_foyer, :curdate, :Id_type_install, 4, :Repas) ; 
+                INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
+                VALUES (:Id_foyer, :curdate, :Id_type_install, 5, :Peage) ; 
+                INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
+                VALUES (:Id_foyer, :curdate, :Id_type_install, 6, :Hotel) ; 
+                INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
+                VALUES (:Id_foyer, :curdate, :Id_type_install, 7, :Autre) ; 
+                ';
+
+    $req = $bdd->prepare('INSERT INTO facture (Id_foyer, Id_date, Id_type_inter) VALUES (:Id_foyer, :curdate, :Id_type_inter )');
+    $req->execute(array(
+        'Id_foyer' => $Id_foyer,
+        'curdate' => $Current_date,
+        'Id_type_inter' => '2'));
 
     $req = $bdd->prepare('INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail, Kms_aller, Repas, Peage, Hotel, Autre) VALUES (:Id_foyer, :curdate, :Id_type_install, :Id_type, :Detail, :Kms_aller, :Repas, :Peage, :Hotel, :Autre )');
     $req->execute(array(
@@ -53,7 +74,63 @@ if (isset ($_POST) && !empty($_POST)) // ne garde pas en mémoire ce qu'il ya da
         'curdate' => $Current_date,
         'Id_type_inter' => '2')) ;
 
+$file = $_FILES['file_kms_aller']['tmp_name'];
+if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer);
+}
+if (!move_uploaded_file($file, $directory . $Id_foyer . '/kms.jpg')) {
+    echo "Impossible de copier le fichier dans" . $directory;
+} else {
+echo "Le fichier a bien été uploader";
 
+
+$file = $_FILES['fiche_repas']['tmp_name'];
+if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer);
+}
+if (!move_uploaded_file($file, $directory . $Id_foyer . '/repas.jpg')) {
+    echo "Impossible de copier le fichier dans" . $directory;
+} else {
+echo "Le fichier a bien été uploader";
+
+
+$file = $_FILES['fiche_peage']['tmp_name'];
+if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer);
+}
+if (!move_uploaded_file($file, $directory . $Id_foyer . '/peage.jpg')) {
+    echo "Impossible de copier le fichier dans" . $directory;
+} else {
+echo "Le fichier a bien été uploader";
+
+
+$file = $_FILES['fiche_hotel']['tmp_name'];
+if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer);
+}
+if (!move_uploaded_file($file, $directory . $Id_foyer . '/hotel.jpg')) {
+    echo "Impossible de copier le fichier dans" . $directory;
+} else {
+echo "Le fichier a bien été uploader";
+
+$file = $_FILES['fiche_autre']['tmp_name'];
+if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer);
+}
+if (!move_uploaded_file($file, $directory . $Id_foyer . '/hotel.jpg')) {
+    echo "Impossible de copier le fichier dans" . $directory;
+} else {
+    echo "Le fichier a bien été uploader";
+
+    $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
+                                        VALUES (:Id_foyer, :curdate , :Id_type_inter , 1 , :Id_foyer , :Name_files , :Files_chemin) ');
+    $req->execute(array(
+        'Id_foyer' => $Id_foyer,
+        'curdate' => $Current_date,
+        'Id_type_inter' => '2',
+        'Name_files' => "kms.jpg",
+        'Files_chemin' => $directory . $Id_foyer));
+}
 }
 // je prend tout de detail en les rangé pas ordre decroissant par Id_date
 $reqListe = $bdd->query("SELECT * FROM details  WHERE Id_type_install = '1' ORDER BY Id_date DESC") ;
@@ -135,7 +212,7 @@ $liste = $reqListe->fetchAll() ;
             <h1 class="modal-title" id="exampleModalLabel">Compte Rendu intervention :</h1>
         </div>
         <div class="modal-body">
-            <form id="form" method="POST">
+            <form id="form" method="POST" enctype="multipart/form-data">
             <div class="col-sm-5 cri" >
                 <h4>Frais Généraux</h4>
                 <div class="panel panel-default">
@@ -161,7 +238,7 @@ $liste = $reqListe->fetchAll() ;
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="kms_aller" name="kms_aller">
                                 <span>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                        <input type="file" class="form-control-file" id="file_kms_aller">
                                 </span>
                             </div>
                         </div>
@@ -186,7 +263,7 @@ $liste = $reqListe->fetchAll() ;
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="repas" name="repas">
                                 <span>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                        <input type="file" class="form-control-file" id="fiche_repas">
                                 </span>
                             </div>
                         </div>
@@ -196,7 +273,7 @@ $liste = $reqListe->fetchAll() ;
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="peage" name="peage">
                                 <span>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                        <input type="file" class="form-control-file" id="fiche_peage">
                                 </span>
                             </div>
 
@@ -207,7 +284,7 @@ $liste = $reqListe->fetchAll() ;
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="hotel" name="hotel">
                                 <span>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                        <input type="file" class="form-control-file" id="fiche_hotel">
                                 </span>
                             </div>
                         </div>
@@ -217,7 +294,7 @@ $liste = $reqListe->fetchAll() ;
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" id="autre" name="autre">
                                 <span>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                        <input type="file" class="form-control-file" id="fiche_autre">
                                 </span>
                             </div>
                         </div>
