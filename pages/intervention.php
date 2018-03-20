@@ -1,11 +1,26 @@
 <?php
 session_start();
-echo $_SESSION['id'];// Afficher l'ID de l'ambassadeur
-echo $_SESSION['prenom_amba'];// Afficher le prénom de l'ambassaeur
-var_dump($_POST);
+//echo $_SESSION['id'];// Afficher l'ID de l'ambassadeur
+//echo $_SESSION['prenom_amba'];// Afficher le prénom de l'ambassaeur
+//var_dump($_POST);
+
+
+include '../php/Db.php';
+// Insertion du bouton supprimer dans mon tableau
+    if(isset($_GET['supp'])){
+        $req = $bdd->prepare('DELETE FROM facture  WHERE Id_foyer = :Id_foyer LIMIT 1 ');
+        $req->execute(array(
+            'Id_foyer' => $_GET['supp'])) ;
+
+        $req = $bdd->prepare('DELETE FROM details  WHERE Id_foyer = :Id_foyer LIMIT 1 ');
+        $req->execute(array(
+            'Id_foyer' => $_GET['supp'])) ;
+
+        header('Location: intervention.php');
+        exit();
+    }
 if (isset ($_POST) && !empty($_POST)) // ne garde pas en mémoire ce qu'il ya dans les champs
 {
-include '../php/Db.php';
 // Insertion
     $Id_foyer=$_POST['foyer'];
     $Current_date=$_POST['date'];
@@ -15,6 +30,7 @@ include '../php/Db.php';
     $Peage=$_POST['peage'];
     $Hotel=$_POST['hotel'];
     $Autre=$_POST['autre'];
+
 
     $req = $bdd->prepare('INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail, Kms_aller, Repas, Peage, Hotel, Autre) VALUES (:Id_foyer, :curdate, :Id_type_install, :Id_type, :Detail, :Kms_aller, :Repas, :Peage, :Hotel, :Autre )');
     $req->execute(array(
@@ -29,7 +45,21 @@ include '../php/Db.php';
         'Hotel' => $Hotel,
         'Autre' => $Autre )) ;
 
+// La table facture sert a avoir tout tes trucs en rapide et la table detail sert a avoir le detail de tes factures
+    // Donc il faut que tu enregistre dans les 2 ta tables ;
+    $req = $bdd->prepare('INSERT INTO facture (Id_foyer, Id_date, Id_type_inter) VALUES (:Id_foyer, :curdate, :Id_type_inter )');
+    $req->execute(array(
+        'Id_foyer' => $Id_foyer,
+        'curdate' => $Current_date,
+        'Id_type_inter' => '2')) ;
+
+
 }
+// je prend tout de detail en les rangé pas ordre decroissant par Id_date
+$reqListe = $bdd->query("SELECT * FROM details  WHERE Id_type_install = '1' ORDER BY Id_date DESC") ;
+$liste = $reqListe->fetchAll() ;
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +72,7 @@ include '../php/Db.php';
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Bootstrap Admin Theme</title>
+    <title>Facturation Simple & Rapide</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -139,7 +169,7 @@ include '../php/Db.php';
                         <div class="form-group" >
                             <label for="amount" class="col-sm-3 control-label" style="padding-top: 0%">Temps Passé </label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" id="amount" name="temps_passe">
+                                <input type="text" class="form-control" id="temps_passe" name="temps_passe">
                             </div>
                         </div>
                     </div>
@@ -218,6 +248,7 @@ include '../php/Db.php';
                                     <tr>
                                         <th>Foyer</th>
                                         <th >Date d'intervention</th>
+                                        <th>Type d'intervention</th>
                                         <th>Nbrs de KM aller parcourus</th>
                                         <th>Temps passé (centième d'heure)</th>
                                         <th>Repas</th>
@@ -226,67 +257,30 @@ include '../php/Db.php';
                                         <th>Autres types de frais</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <?php
+                                foreach ( $liste as $item ) {
+                                    ?>
                                     <tr class="odd gradeX">
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 4.0</td>
-                                        <td>Win 95+</td>
-                                        <td class="center">4</td>
-                                        <td class="center">X</td>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 4.0</td>
-                                        <td>Win 95+</td>
+                                        <td><?php echo $item['Id_foyer'] ; ?></td>
+                                        <td><?php echo $item['Id_date'] ; ?></td>
+                                        <td><?php echo "Intervention" ?></td>
+                                        <td><?php echo $item['Kms_aller'] ; ?></td>
+                                        <td><?php echo $item['Detail'] ; ?></td>
+                                        <td><?php echo $item['Repas'] ; ?></td>
+                                        <td><?php echo $item['Peage'] ; ?></td>
+                                        <td><?php echo $item['Hotel'] ; ?></td>
+                                        <td><?php echo $item['Autre'] ; ?></td>
+                                        <td><i class="fa fa-trash" onclick="document.location.href = 'intervention.php?supp=<?php echo $item['Id_foyer'] ;  ?>' "></i></td>
+
+
+
+
+
                                     </tr>
-                                    <tr class="even gradeC">
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 5.0</td>
-                                        <td>Win 95+</td>
-                                        <td class="center">5</td>
-                                        <td class="center">C</td>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 4.0</td>
-                                        <td>Win 95+</td>
-                                    </tr>
-                                    <tr class="odd gradeA">
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 5.5</td>
-                                        <td>Win 95+</td>
-                                        <td class="center">5.5</td>
-                                        <td class="center">A</td>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 4.0</td>
-                                        <td>Win 95+</td>
-                                    </tr>
-                                    <tr class="even gradeA">
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 6</td>
-                                        <td>Win 98+</td>
-                                        <td class="center">6</td>
-                                        <td class="center">A</td>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 4.0</td>
-                                        <td>Win 95+</td>
-                                    </tr>
-                                    <tr class="odd gradeA">
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 7</td>
-                                        <td>Win XP SP2+</td>
-                                        <td class="center">7</td>
-                                        <td class="center">A</td>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 4.0</td>
-                                        <td>Win 95+</td>
-                                    </tr>
-                                    <tr class="even gradeA">
-                                        <td>Trident</td>
-                                        <td>AOL browser (AOL desktop)</td>
-                                        <td>Win XP</td>
-                                        <td class="center">6</td>
-                                        <td class="center">A</td>
-                                        <td>Trident</td>
-                                        <td>Internet Explorer 4.0</td>
-                                        <td>Win 95+</td>
-                                    </tr>
+                                    <?php
+                                }
+                                ?>
+
                                 </tbody>
                             </table>
 
@@ -350,11 +344,15 @@ $(document).on('click', '.input-remove-row', function(){
 $(function(){
     $('.preview-add-button').click(function(){
         var form_data = {};
-        form_data["concept"] = $('.payment-form input[name="concept"]').val();
-        form_data["description"] = $('.payment-form input[name="description"]').val();
-        form_data["amount"] = parseFloat($('.payment-form input[name="amount"]').val()).toFixed(2);
-        form_data["status"] = $('.payment-form #status option:selected').text();
+        form_data["foyer"] = $('.payment-form input[name="foyer"]').val();
+        form_data["kms_aller"] = $('.payment-form input[name="kms_aller"]').val();
+        form_data["temps_passe"] = parseFloat($('.payment-form input[name="temps_passe"]').val()).toFixed(2);
+        form_data["repas"] = $('.payment-form #status option:selected').text();
         form_data["date"] = $('.payment-form input[name="date"]').val();
+
+        form_data["peage"] = $('.payment-form input[name="peage"]').val();
+        form_data["hotel"] = $('.payment-form input[name="hotel"]').val();
+        form_data["autre"] = $('.payment-form input[name="autre"]').val();
         form_data["remove-row"] = '<span class="glyphicon glyphicon-remove"></span>';
         var row = $('<tr></tr>');
         $.each(form_data, function( type, value ) {

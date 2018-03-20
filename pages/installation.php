@@ -22,7 +22,7 @@ if (isset ($_POST) && !empty($_POST))
 // Insertion
 $Id_foyer=$_POST['foyer'];
 $Current_date=$_POST['date'];
-$Id_type = isset($_POST['packweb']) ? 1 : 0;
+$Id_type = isset($_POST['packweb']) ? 2 : 1;
 $Detail=$_POST['nbr_poste'];
 $Kms_aller=$_POST['kms_aller'];
 $Repas=$_POST['repas'];
@@ -43,6 +43,7 @@ $req->execute(array(
     'Peage' => $Peage,
     'Hotel' => $Hotel,
     'Autre' => $Autre)) ;
+
 // La table facture sert a avoir tout tes trucs en rapide et la table detail sert a avoir le detail de tes factures
     // Donc il faut que tu enregistre dans les 2 ta tables ;
     $req = $bdd->prepare('INSERT INTO facture (Id_foyer, Id_date, Id_type_inter) VALUES (:Id_foyer, :curdate, :Id_type_inter )');
@@ -56,14 +57,7 @@ $req->execute(array(
 // je prend tout de detail en les rangé pas ordre decroissant par Id_date
 $reqListe = $bdd->query("SELECT * FROM details  WHERE Id_type_install = '1' ORDER BY Id_date DESC") ;
 $liste = $reqListe->fetchAll() ;
-// jte le fais pour l'example mais le mot de passe ne sert a rien d'etre stocker
-//VOILA ?
-// ouaip du coup je vais enlever le pass mdr
-// mais echo ça affiche directement sur le site non
-// Oui apres le echo tu peux le mettre das le HTML LOOK
-// Dans la normalité des choese tu stock que l'id dans  la session et sur chaque page tu fait une requete pour recueper les info de l'user
-// Mais comme tu as que 3 information tu peux tout mettre dans SESSION ca passe
-// si tu envisage t'avoir plsu d'information il faut stocker que l'id et faire des requete sur chaque pages
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -293,6 +287,7 @@ $liste = $reqListe->fetchAll() ;
                 <tr>
                     <th>Foyer</th>
                     <th>Date d'intervention</th>
+                    <th>Type d'intervention</th>
                     <th>Nbrs de KM aller parcourus</th>
                     <th>Forfait</th>
                     <th>Kms aller</th>
@@ -311,16 +306,7 @@ $liste = $reqListe->fetchAll() ;
                     <tr class="odd gradeX">
                         <td><?php echo $item['Id_foyer'] ; ?></td>
                         <td><?php echo $item['Id_date'] ; ?></td>
-                        <td>
-                            <?php
-                                if($item['Id_type_install'] == "1"){
-                                    echo "Installation" ;
-                                }else{
-                                    echo "Intervention" ;
-                                }
-
-                            ?>
-                        </td>
+                        <td><?php echo 'Installation'?></td>
                         <td>
                             <?php
                             if($item['Id_type'] == "1"){
