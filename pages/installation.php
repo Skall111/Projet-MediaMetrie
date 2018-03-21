@@ -455,7 +455,14 @@ foreach ($liste as $key => $value) {
                         <td><?php echo $item['Hotel']; ?></td>
                         <td><?php echo $item['Autre']; ?></td>
                         <td><i class="fa fa-trash"
-                               onclick="document.location.href = 'installation.php?supp=<?php echo $item['Id_foyer']; ?>' "></i>
+                               onclick="document.location.href = 'installation.php?supp=<?php echo $item['Id_foyer']; ?>' ">
+
+                            </i>
+                            <i class="fas fa-edit"
+                               onclick="document.location.href = 'detail_install.php<?php echo $item['Id_foyer']; ?>' ">
+
+                            </i>
+
                         </td>
 
 
