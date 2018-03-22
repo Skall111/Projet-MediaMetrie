@@ -23,13 +23,13 @@ if(isset($_POST) && !empty($_POST)) {
     $Hotel = @$_POST['hotel'];
     $Autre = @$_POST['autre'];
 
-    $string_req = 'UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 1, Detail = '.$Kms_aller.' WHERE Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 2, Detail = '.$Id_type.' WHERE Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 3, Detail = '.$Detail.' WHERE Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 4, Detail = '.$Repas.' WHERE Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 5, Detail = '.$Peage.' WHERE Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 6, Detail = '.$Hotel.' WHERE Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 7, Detail = '.$Autre.' WHERE Id_foyer = '.$_GET['foyer'].' ; ';
+    $string_req = 'UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 1, Detail = '.$Kms_aller.' WHERE Id_type = 1 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 2, Detail = '.$Id_type.' WHERE Id_type = 2 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 3, Detail = '.$Detail.' WHERE Id_type = 3 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 4, Detail = '.$Repas.' WHERE Id_type = 4 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 5, Detail = '.$Peage.' WHERE Id_type = 5 ANDId_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 6, Detail = '.$Hotel.' WHERE  Id_type = 6 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = '.$Current_date.', Id_type_install = 1, Id_type = 7, Detail = '.$Autre.' WHERE Id_type = 7 AND Id_foyer = '.$_GET['foyer'].' ; ';
     $req = $bdd->prepare($string_req);
     $req->execute(array(
         'Id_foyer' => $Id_foyer,
