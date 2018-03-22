@@ -28,7 +28,10 @@ if (isset($_GET['supp'])) {
     $req->execute(array(
         'Id_foyer' => $_GET['supp']));
 
-    $req = $bdd->prepare('DELETE FROM details  WHERE Id_foyer = :Id_foyer LIMIT 1 ');
+    $req = $bdd->prepare('DELETE FROM details  WHERE Id_foyer = :Id_foyer ');
+    $req->execute(array(
+        'Id_foyer' => $_GET['supp']));
+    $req = $bdd->prepare('DELETE FROM fichiers  WHERE Id_foyer = :Id_foyer ');
     $req->execute(array(
         'Id_foyer' => $_GET['supp']));
 
@@ -87,6 +90,10 @@ if (isset ($_POST) && !empty($_POST)) {
         'Id_type_inter' => '1'));
 
 
+
+
+
+
 // Ce script est a dupliquer autant de fois qu'il y'a de fichier a enregistrer
     //Faut pas oublier de mettre un name a l'input file (moi j'ai mis file_kms_aller)
     // Il est valable que pour kms_aller  ;
@@ -95,62 +102,156 @@ if (isset ($_POST) && !empty($_POST)) {
     if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
         mkdir($directory . $Id_foyer);
     }
-    if (!move_uploaded_file($file, $directory . $Id_foyer . '/kms.jpg')) {
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory;
     } else {
         echo "Le fichier a bien été uploader";
-
-
-    $file = $_FILES['fiche_repas']['tmp_name'];
-    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-            mkdir($directory . $Id_foyer);
-        }
-    if (!move_uploaded_file($file, $directory . $Id_foyer . '/repas.jpg')) {
-            echo "Impossible de copier le fichier dans" . $directory;
-    } else {
-            echo "Le fichier a bien été uploader";
-
-
-    $file = $_FILES['fiche_peage']['tmp_name'];
-    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-                mkdir($directory . $Id_foyer);
-    }
-    if (!move_uploaded_file($file, $directory . $Id_foyer . '/peage.jpg')) {
-        echo "Impossible de copier le fichier dans" . $directory;
-    } else {
-        echo "Le fichier a bien été uploader";
-
-
-    $file = $_FILES['fiche_hotel']['tmp_name'];
-    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-            mkdir($directory . $Id_foyer);
-        }
-    if (!move_uploaded_file($file, $directory . $Id_foyer . '/hotel.jpg')) {
-            echo "Impossible de copier le fichier dans" . $directory;
-    } else {
-            echo "Le fichier a bien été uploader";
-
-    $file = $_FILES['fiche_autre']['tmp_name'];
-    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-            mkdir($directory . $Id_foyer);
-        }
-    if (!move_uploaded_file($file, $directory . $Id_foyer . '/hotel.jpg')) {
-            echo "Impossible de copier le fichier dans" . $directory;
-    } else {
-            echo "Le fichier a bien été uploader";
-
+        /*
+             * ATTENTION IL FAUT CHANGER DANS LA REQUERE prepare() le chiffre qui suit :Id_type_inter
+             * C'est ce qui defini le champs !!
+         * Il faut aussi changer le Name_files dasn chaque reqete
+             * */
         $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
                                         VALUES (:Id_foyer, :curdate , :Id_type_inter , 1 , :Id_foyer , :Name_files , :Files_chemin) ');
         $req->execute(array(
             'Id_foyer' => $Id_foyer,
             'curdate' => $Current_date,
             'Id_type_inter' => '1',
-            'Name_files' => "kms.jpg",
+            'Name_files' => $_FILES['file_kms_aller']['name'],
             'Files_chemin' => $directory . $Id_foyer));
     }
+
+
+
+
+
+
+
+
+$file = $_FILES['fiche_repas']['tmp_name'];
+if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer);
+}
+if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
+    echo "Impossible de copier le fichier dans" . $directory;
+} else {
+    echo "Le fichier a bien été uploader";
+    /*
+         * ATTENTION IL FAUT CHANGER DANS LA REQUERE prepare() le chiffre qui suit :Id_type_inter
+         * C'est ce qui defini le champs !!
+     * * Il faut aussi changer le Name_files dasn chaque reqete
+         * */
+    $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
+                                        VALUES (:Id_foyer, :curdate , :Id_type_inter , 4 , :Id_foyer , :Name_files , :Files_chemin) ');
+    $req->execute(array(
+        'Id_foyer' => $Id_foyer,
+        'curdate' => $Current_date,
+        'Id_type_inter' => '1',
+        'Name_files' => $_FILES['file_kms_aller']['name'],
+        'Files_chemin' => $directory . $Id_foyer));
+}
+
+
+
+
+
+
+
+
+
+$file = $_FILES['fiche_peage']['tmp_name'];
+if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer);
+}
+if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
+    echo "Impossible de copier le fichier dans" . $directory;
+} else {
+    echo "Le fichier a bien été uploader";
+    /*
+         * ATTENTION IL FAUT CHANGER DANS LA REQUERE prepare() le chiffre qui suit :Id_type_inter
+         * C'est ce qui defini le champs !!
+     * * Il faut aussi changer le Name_files dasn chaque reqete
+         * */
+    $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
+                                        VALUES (:Id_foyer, :curdate , :Id_type_inter , 5 , :Id_foyer , :Name_files , :Files_chemin) ');
+    $req->execute(array(
+        'Id_foyer' => $Id_foyer,
+        'curdate' => $Current_date,
+        'Id_type_inter' => '1',
+        'Name_files' => $_FILES['file_kms_aller']['name'],
+        'Files_chemin' => $directory . $Id_foyer));
+
+}
+
+
+
+
+
+
+
+
+$file = $_FILES['fiche_hotel']['tmp_name'];
+if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer);
+}
+if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
+    echo "Impossible de copier le fichier dans" . $directory;
+} else {
+    echo "Le fichier a bien été uploader";
+
+    /*
+     * ATTENTION IL FAUT CHANGER DANS LA REQUERE prepare() le chiffre qui suit :Id_type_inter
+     * C'est ce qui defini le champs !!
+     * * Il faut aussi changer le Name_files dasn chaque reqete
+     * */
+    $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
+                                        VALUES (:Id_foyer, :curdate , :Id_type_inter , 6 , :Id_foyer , :Name_files , :Files_chemin) ');
+    $req->execute(array(
+        'Id_foyer' => $Id_foyer,
+        'curdate' => $Current_date,
+        'Id_type_inter' => '1',
+        'Name_files' => $_FILES['file_kms_aller']['name'],
+        'Files_chemin' => $directory . $Id_foyer));
+}
+
+
+
+
+
+
+
+$file = $_FILES['fiche_autre']['tmp_name'];
+if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer);
+}
+if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
+    echo "Impossible de copier le fichier dans" . $directory;
+} else {
+    echo "Le fichier a bien été uploader";
+    /*
+                 * ATTENTION IL FAUT CHANGER DANS LA REQUERE prepare() le chiffre qui suit :Id_type_inter
+                 * C'est ce qui defini le champs !!
+     * * Il faut aussi changer le Name_files dasn chaque reqete
+                 * */
+    $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
+                                        VALUES (:Id_foyer, :curdate , :Id_type_inter , 7 , :Id_foyer , :Name_files , :Files_chemin) ');
+    $req->execute(array(
+        'Id_foyer' => $Id_foyer,
+        'curdate' => $Current_date,
+        'Id_type_inter' => '1',
+        'Name_files' => $_FILES['file_kms_aller']['name'],
+        'Files_chemin' => $directory . $Id_foyer));
+
 //Fin Du script de DL
 
 }
+
+
+
+
+}
+
+
 // je prend tout de detail en les rangé pas ordre decroissant par Id_date
 $reqListe = $bdd->query("SELECT * FROM details  WHERE Id_type_install = '1' ORDER BY Id_date DESC");
 $liste = $reqListe->fetchAll();
@@ -459,7 +560,7 @@ foreach ($liste as $key => $value) {
 
                             </i>
                             <i class="fas fa-edit"
-                               onclick="document.location.href = 'detail_install.php<?php echo $item['Id_foyer']; ?>' ">
+                               onclick="document.location.href = 'detail_install.php?foyer=<?php echo $item['Id_foyer']; ?>' ">
 
                             </i>
 
