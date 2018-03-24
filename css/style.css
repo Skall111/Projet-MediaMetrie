@@ -74,13 +74,12 @@ form {
     z-index: 2;
 }
 
-}
 form input:hover {
     background-color: rgba(255, 255, 255, 0.4);
 }
 form input:focus {
     background-color: white;
-    width: 300px
+    width: 300px;
 }
 form button {
     -webkit-appearance: none;
@@ -245,11 +244,6 @@ form button:hover {
 }
 
 
-.interModalPerso {
-
- /*margin-left: ;*/
-
-}
 
 .cri {
 

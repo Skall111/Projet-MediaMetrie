@@ -1,16 +1,8 @@
 <?php
 session_start();
 include '../php/Db.php';
-$directory = "C:/wamp64\/www/Projet-MediaMetrie/Files/";
-if(isset($_GET) && !empty($_GET)){
-    $reqDetail = $bdd->query("SELECT * FROM details WHERE Id_foyer = ".$_GET['foyer']);
-    $detail = $reqDetail->fetchAll();
-    $reqImage = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = ".$_GET['foyer']);
-    $Image = $reqImage->fetchAll();
-}else{
-    echo "Un erreur a eu lieu , nous sommes désolé " ;
-    exit;
-}
+$directory = "C:/wamp64/www/Projet-MediaMetrie/Files/";
+
 $Id_foyer = $_GET['foyer'];
 if(isset($_POST) && !empty($_POST)) {
     $Id_foyer = @$_POST['foyer'];
@@ -54,13 +46,15 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
         'curdate' => $Current_date,
         'Id_type_install' => '1',
         'param' => $_GET['foyer']));
-
+/*
+ * PEITI JUIF
+ * */
     $file = $_FILES['file_kms_aller']['tmp_name'];
-    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer);
+    if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+        mkdir($directory . $Id_foyer.'_'.$Current_date);
     }
-    if (!move_uploaded_file($file, $directory . $Id_foyer . '/' . $_FILES['file_kms_aller']['name'])) {
-        echo "Impossible de copier le fichier dans" . $directory. $Id_foyer . '/' . $_FILES['file_kms_aller']['name'];
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_kms_aller']['name'])) {
+        echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_kms_aller']['name'];
     } else {
         echo "Le fichier a bien été uploader";
         /*
@@ -78,19 +72,205 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
                 'curdate' => $Current_date,
                 'Id_type_inter' => '1',
                 'Name_files' => $_FILES['file_kms_aller']['name'],
-                'Files_chemin' => $directory . $Id_foyer));
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
         } else {
             $req = $bdd->prepare('UPDATE fichiers SET Fichier = :Name_files , Url = :Files_chemin WHERE Id_foyer = :Id_foyer AND Id_type = 1 ');
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'Name_files' => $_FILES['file_kms_aller']['name'],
-                'Files_chemin' => $directory . $Id_foyer));
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
         }
         $reqImage = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = ".$_GET['foyer']);
         $Image = $reqImage->fetchAll();
 
     }
+    /*
+     * PETIT FOUR
+
+     * */
+    /*
+ * PEITI JUIF
+ * */
+    $file = $_FILES['file_repas']['tmp_name'];
+    if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+        mkdir($directory . $Id_foyer.'_'.$Current_date);
+    }
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_repas']['name'])) {
+        echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_repas']['name'];
+    } else {
+        echo "Le fichier a bien été uploader";
+        /*
+             * ATTENTION IL FAUT CHANGER DANS LA REQUERE prepare() le chiffre qui suit :Id_type_inter
+             * C'est ce qui defini le champs !!
+         * Il faut aussi changer le Name_files dasn chaque reqete
+             * */
+        $resultreq = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = " . $_GET['foyer'] . " AND Id_type = 4");
+        $result = $resultreq->fetch();
+        if (!$result) {
+            $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
+                                        VALUES (:Id_foyer, :curdate , :Id_type_inter , 4 , :Id_foyer , :Name_files , :Files_chemin) ');
+            $req->execute(array(
+                'Id_foyer' => $Id_foyer,
+                'curdate' => $Current_date,
+                'Id_type_inter' => '1',
+                'Name_files' => $_FILES['file_repas']['name'],
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
+
+        } else {
+            $req = $bdd->prepare('UPDATE fichiers SET Fichier = :Name_files , Url = :Files_chemin WHERE Id_foyer = :Id_foyer AND Id_type = 4 ');
+            $req->execute(array(
+                'Id_foyer' => $Id_foyer,
+                'Name_files' => $_FILES['file_repas']['name'],
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
+        }
+        $reqImage = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = ".$_GET['foyer']);
+        $Image = $reqImage->fetchAll();
+
+    }
+    /*
+     * PETIT FOUR
+
+     * */
+    /*
+ * PEITI JUIF
+ * */
+    $file = $_FILES['file_peage']['tmp_name'];
+    if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+        mkdir($directory . $Id_foyer.'_'.$Current_date);
+    }
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_peage']['name'])) {
+        echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_peage']['name'];
+    } else {
+        echo "Le fichier a bien été uploader";
+        /*
+             * ATTENTION IL FAUT CHANGER DANS LA REQUERE prepare() le chiffre qui suit :Id_type_inter
+             * C'est ce qui defini le champs !!
+         * Il faut aussi changer le Name_files dasn chaque reqete
+             * */
+        $resultreq = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = " . $_GET['foyer'] . " AND Id_type = 5");
+        $result = $resultreq->fetch();
+        if (!$result) {
+            $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
+                                        VALUES (:Id_foyer, :curdate , :Id_type_inter , 5 , :Id_foyer , :Name_files , :Files_chemin) ');
+            $req->execute(array(
+                'Id_foyer' => $Id_foyer,
+                'curdate' => $Current_date,
+                'Id_type_inter' => '1',
+                'Name_files' => $_FILES['file_peage']['name'],
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
+
+        } else {
+            $req = $bdd->prepare('UPDATE fichiers SET Fichier = :Name_files , Url = :Files_chemin WHERE Id_foyer = :Id_foyer AND Id_type = 5 ');
+            $req->execute(array(
+                'Id_foyer' => $Id_foyer,
+                'Name_files' => $_FILES['file_peage']['name'],
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
+        }
+        $reqImage = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = ".$_GET['foyer']);
+        $Image = $reqImage->fetchAll();
+
+    }
+    /*
+     * PETIT FOUR
+
+     * */
+    /*
+ * PEITI JUIF
+ * */
+    $file = $_FILES['file_hotel']['tmp_name'];
+    if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+        mkdir($directory . $Id_foyer.'_'.$Current_date);
+    }
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_hotel']['name'])) {
+        echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_hotel']['name'];
+    } else {
+        echo "Le fichier a bien été uploader";
+        /*
+             * ATTENTION IL FAUT CHANGER DANS LA REQUERE prepare() le chiffre qui suit :Id_type_inter
+             * C'est ce qui defini le champs !!
+         * Il faut aussi changer le Name_files dasn chaque reqete
+             * */
+        $resultreq = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = " . $_GET['foyer'] . " AND Id_type = 6");
+        $result = $resultreq->fetch();
+        if (!$result) {
+            $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
+                                        VALUES (:Id_foyer, :curdate , :Id_type_inter , 6 , :Id_foyer , :Name_files , :Files_chemin) ');
+            $req->execute(array(
+                'Id_foyer' => $Id_foyer,
+                'curdate' => $Current_date,
+                'Id_type_inter' => '1',
+                'Name_files' => $_FILES['file_hotel']['name'],
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
+
+        } else {
+            $req = $bdd->prepare('UPDATE fichiers SET Fichier = :Name_files , Url = :Files_chemin WHERE Id_foyer = :Id_foyer AND Id_type = 6 ');
+            $req->execute(array(
+                'Id_foyer' => $Id_foyer,
+                'Name_files' => $_FILES['file_hotel']['name'],
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
+        }
+        $reqImage = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = ".$_GET['foyer']);
+        $Image = $reqImage->fetchAll();
+
+    }
+    /*
+     * PETIT FOUR
+
+     * */
+    /*
+ * PEITI JUIF
+ * */
+    $file = $_FILES['file_autre']['tmp_name'];
+    if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+        mkdir($directory . $Id_foyer.'_'.$Current_date);
+    }
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_autre']['name'])) {
+        echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_autre']['name'];
+    } else {
+        echo "Le fichier a bien été uploader";
+        /*
+             * ATTENTION IL FAUT CHANGER DANS LA REQUERE prepare() le chiffre qui suit :Id_type_inter
+             * C'est ce qui defini le champs !!
+         * Il faut aussi changer le Name_files dasn chaque reqete
+             * */
+        $resultreq = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = " . $_GET['foyer'] . " AND Id_type = 7");
+        $result = $resultreq->fetch();
+        if (!$result) {
+            $req = $bdd->prepare('INSERT INTO fichiers(Id_foyer, Id_date, Id_type_install, Id_type, Id_dossier, Fichier, Url) 
+                                        VALUES (:Id_foyer, :curdate , :Id_type_inter , 7 , :Id_foyer , :Name_files , :Files_chemin) ');
+            $req->execute(array(
+                'Id_foyer' => $Id_foyer,
+                'curdate' => $Current_date,
+                'Id_type_inter' => '1',
+                'Name_files' => $_FILES['file_autre']['name'],
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
+
+        } else {
+            $req = $bdd->prepare('UPDATE fichiers SET Fichier = :Name_files , Url = :Files_chemin WHERE Id_foyer = :Id_foyer AND Id_type = 7 ');
+            $req->execute(array(
+                'Id_foyer' => $Id_foyer,
+                'Name_files' => $_FILES['file_autre']['name'],
+                'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
+        }
+        $reqImage = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = ".$_GET['foyer']);
+        $Image = $reqImage->fetchAll();
+
+    }
+    /*
+     * PETIT FOUR
+
+     * */
+
+}
+if(isset($_GET) && !empty($_GET)){
+    $reqDetail = $bdd->query("SELECT * FROM details WHERE Id_foyer = ".$_GET['foyer']);
+    $detail = $reqDetail->fetchAll();
+    $reqImage = $bdd->query("SELECT * FROM fichiers WHERE Id_foyer = ".$_GET['foyer']);
+    $Image = $reqImage->fetchAll();
+}else{
+    echo "Un erreur a eu lieu , nous sommes désolé " ;
+    exit;
 }
 /*
 * 1 => Kms_aller
@@ -286,7 +466,7 @@ foreach ($Image as $item){
                                         <input type="text" class="form-control" id="concept"
                                                name="repas" value="<?php echo $repas ; ?>">
                                         <span>
-                                        <input type="file" class="form-control-file" id="fiche_repas" >
+                                        <input type="file" class="form-control-file" id="fiche_repas" name="file_repas">
                                 </span>
                                     </div>
                                 </div>
@@ -298,7 +478,7 @@ foreach ($Image as $item){
                                         <input type="text" class="form-control" id="peage"
                                                name="peage" value="<?php echo $peage ; ?>">
                                         <span>
-                                        <input type="file" class="form-control-file" id="fiche_peage" >
+                                        <input type="file" class="form-control-file" id="fiche_peage" name="file_peage" >
                                 </span>
                                     </div>
 
@@ -311,7 +491,7 @@ foreach ($Image as $item){
                                         <input type="text" class="form-control" id="hotel"
                                                name="hotel" value="<?php echo $hotel ; ?>">
                                         <span>
-                                        <input type="file" class="form-control-file" id="fiche_hotel" >
+                                        <input type="file" class="form-control-file" id="fiche_hotel" name="file_hotel">
                                 </span>
                                     </div>
                                 </div>
@@ -323,7 +503,7 @@ foreach ($Image as $item){
                                         <input type="text" class="form-control" id="autre"
                                                name="autre" value="<?php echo $autres ; ?>">
                                         <span>
-                                        <input type="file" class="form-control-file" id="fiche_autre">
+                                        <input type="file" class="form-control-file" id="fiche_autre" name="file_autre">
                                 </span>
                                     </div>
                                 </div>
@@ -337,7 +517,6 @@ foreach ($Image as $item){
 
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                 <button type="button" onclick="$('#form').submit();" class="btn btn-primary">Sauvegarder les changements
                 </button>
             </div>

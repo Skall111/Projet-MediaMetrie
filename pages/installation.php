@@ -3,7 +3,10 @@ session_start(); // J'évite de perdre les données en changeant de page sur la 
 //echo $_SESSION['id'];// Afficher l'ID de l'ambassadeur
 //echo $_SESSION['prenom_amba'];// Afficher le prénom de l'ambassaeur
 //var_dump($_POST);
-
+if(!isset($_SESSION['id'])){
+    header('Location: ../php/connexion.php');
+    exit;
+}
 
 /*
  * POUR DILMEN
@@ -41,7 +44,7 @@ if (isset($_GET['supp'])) {
 
 if (isset ($_POST) && !empty($_POST)) {
     //Il faut le chemin complet
-    $directory = "/Applications/MAMP/htdocs/Projet-MediaMetrie/Files/";
+    $directory = "C:/wamp64/www/Projet-MediaMetrie/Files/";
 // Insertion
     $Id_foyer = $_POST['foyer'];
     $Current_date = $_POST['date'];
@@ -53,12 +56,13 @@ if (isset ($_POST) && !empty($_POST)) {
     $Hotel = $_POST['hotel'];
     $Autre = $_POST['autre'];
 
+
     $string_req = 'INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
                 VALUES (:Id_foyer, :curdate, :Id_type_install, 3, :Detail) ; 
                 INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
                 VALUES (:Id_foyer, :curdate, :Id_type_install, 1, :Kms_aller) ; 
                 INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
-                VALUES (:Id_foyer, :curdate, :Id_type_install, 2, :Detail) ; 
+                VALUES (:Id_foyer, :curdate, :Id_type_install, 2, :Id_type) ; 
                 INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
                 VALUES (:Id_foyer, :curdate, :Id_type_install, 4, :Repas) ; 
                 INSERT INTO details (Id_foyer, Id_date, Id_type_install, Id_type, Detail) 
@@ -99,10 +103,10 @@ if (isset ($_POST) && !empty($_POST)) {
     // Il est valable que pour kms_aller  ;
 
     $file = $_FILES['file_kms_aller']['tmp_name'];
-    if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer);
+    if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+        mkdir($directory . $Id_foyer.'_'.$Current_date);
     }
-    if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
+    if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_kms_aller']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory;
     } else {
         echo "Le fichier a bien été uploader";
@@ -118,7 +122,7 @@ if (isset ($_POST) && !empty($_POST)) {
             'curdate' => $Current_date,
             'Id_type_inter' => '1',
             'Name_files' => $_FILES['file_kms_aller']['name'],
-            'Files_chemin' => $directory . $Id_foyer));
+            'Files_chemin' => $directory . $Id_foyer . '_'.$Current_date));
     }
 
 
@@ -128,11 +132,11 @@ if (isset ($_POST) && !empty($_POST)) {
 
 
 
-$file = $_FILES['fiche_repas']['tmp_name'];
-if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-    mkdir($directory . $Id_foyer);
+$file = $_FILES['file_repas']['tmp_name'];
+if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer.'_'.$Current_date);
 }
-if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
+if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_repas']['name'])) {
     echo "Impossible de copier le fichier dans" . $directory;
 } else {
     echo "Le fichier a bien été uploader";
@@ -147,8 +151,8 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_al
         'Id_foyer' => $Id_foyer,
         'curdate' => $Current_date,
         'Id_type_inter' => '1',
-        'Name_files' => $_FILES['file_kms_aller']['name'],
-        'Files_chemin' => $directory . $Id_foyer));
+        'Name_files' => $_FILES['file_repas']['name'],
+        'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 }
 
 
@@ -159,11 +163,11 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_al
 
 
 
-$file = $_FILES['fiche_peage']['tmp_name'];
-if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-    mkdir($directory . $Id_foyer);
+$file = $_FILES['file_peage']['tmp_name'];
+if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer.'_'.$Current_date);
 }
-if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
+if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_peage']['name'])) {
     echo "Impossible de copier le fichier dans" . $directory;
 } else {
     echo "Le fichier a bien été uploader";
@@ -178,23 +182,19 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_al
         'Id_foyer' => $Id_foyer,
         'curdate' => $Current_date,
         'Id_type_inter' => '1',
-        'Name_files' => $_FILES['file_kms_aller']['name'],
-        'Files_chemin' => $directory . $Id_foyer));
+        'Name_files' => $_FILES['file_peage']['name'],
+        'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
 }
 
 
 
 
-
-
-
-
-$file = $_FILES['fiche_hotel']['tmp_name'];
-if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-    mkdir($directory . $Id_foyer);
+$file = $_FILES['file_hotel']['tmp_name'];
+if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer.'_'.$Current_date);
 }
-if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
+if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_hotel']['name'])) {
     echo "Impossible de copier le fichier dans" . $directory;
 } else {
     echo "Le fichier a bien été uploader";
@@ -210,8 +210,8 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_al
         'Id_foyer' => $Id_foyer,
         'curdate' => $Current_date,
         'Id_type_inter' => '1',
-        'Name_files' => $_FILES['file_kms_aller']['name'],
-        'Files_chemin' => $directory . $Id_foyer));
+        'Name_files' => $_FILES['file_hotel']['name'],
+        'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 }
 
 
@@ -220,11 +220,11 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_al
 
 
 
-$file = $_FILES['fiche_autre']['tmp_name'];
-if (!file_exists($directory . $Id_foyer)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-    mkdir($directory . $Id_foyer);
+$file = $_FILES['file_autre']['tmp_name'];
+if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
+    mkdir($directory . $Id_foyer.'_'.$Current_date);
 }
-if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_aller']['name'])) {
+if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_autre']['name'])) {
     echo "Impossible de copier le fichier dans" . $directory;
 } else {
     echo "Le fichier a bien été uploader";
@@ -239,8 +239,8 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '/'.$_FILES['file_kms_al
         'Id_foyer' => $Id_foyer,
         'curdate' => $Current_date,
         'Id_type_inter' => '1',
-        'Name_files' => $_FILES['file_kms_aller']['name'],
-        'Files_chemin' => $directory . $Id_foyer));
+        'Name_files' => $_FILES['file_autre']['name'],
+        'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
 //Fin Du script de DL
 
@@ -288,7 +288,6 @@ foreach ($liste as $key => $value) {
     if ($key != $value['Id_foyer']) {
         unset($liste[$key]);
     }
-
 
 }
 ?>
@@ -427,7 +426,7 @@ foreach ($liste as $key => $value) {
                                         <input type="text" class="form-control" id="concept"
                                                name="repas">
                                         <span>
-                                        <input type="file" class="form-control-file" id="fiche_repas">
+                                        <input type="file" class="form-control-file" id="fiche_repas" name="file_repas">
                                 </span>
                                     </div>
                                 </div>
@@ -439,7 +438,7 @@ foreach ($liste as $key => $value) {
                                         <input type="text" class="form-control" id="peage"
                                                name="peage">
                                         <span>
-                                        <input type="file" class="form-control-file" id="fiche_peage">
+                                        <input type="file" class="form-control-file" id="fiche_peage" name="file_peage">
                                 </span>
                                     </div>
 
@@ -452,7 +451,7 @@ foreach ($liste as $key => $value) {
                                         <input type="text" class="form-control" id="hotel"
                                                name="hotel">
                                         <span>
-                                        <input type="file" class="form-control-file" id="fiche_hotel">
+                                        <input type="file" class="form-control-file" name="file_hotel" >
                                 </span>
                                     </div>
                                 </div>
@@ -464,7 +463,7 @@ foreach ($liste as $key => $value) {
                                         <input type="text" class="form-control" id="autre"
                                                name="autre">
                                         <span>
-                                        <input type="file" class="form-control-file" id="fiche_autre">
+                                        <input type="file" class="form-control-file"  name="file_autre">
                                 </span>
                                     </div>
                                 </div>
@@ -559,7 +558,7 @@ foreach ($liste as $key => $value) {
                                onclick="document.location.href = 'installation.php?supp=<?php echo $item['Id_foyer']; ?>' ">
 
                             </i>
-                            <i class="fas fa-edit"
+                            <i class="fa fa-edit"
                                onclick="document.location.href = 'detail_install.php?foyer=<?php echo $item['Id_foyer']; ?>' ">
 
                             </i>
