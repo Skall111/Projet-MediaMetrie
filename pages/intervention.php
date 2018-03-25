@@ -500,6 +500,7 @@ foreach ($liste as $key => $value) {
                         </i>
                     </td>
                     <?php
+                    if($_SESSION['ADMIN'] == 1) {
                     if($item['Pdf'] == 1){
                         ?>
                         <i class="fa fa-ban"
@@ -517,6 +518,7 @@ foreach ($liste as $key => $value) {
 
                 </tr>
                 <?php
+            }
             }
             ?>
 

@@ -30,6 +30,11 @@ if (!$resultat)
 }
 else
 {
+    if($resultat['admin'] == 1){
+        $_SESSION['ADMIN'] == 1 ;
+    }else{
+        $_SESSION['ADMIN'] == 0 ;
+    }
         $_SESSION['id'] = $resultat['id'];// La je mets l'id dasn la varible (recuperable depuis toute les pages ) $_SESSION au rang 'id'
         $_SESSION['prenom_amba'] = $resultat['prenom_amba'];//Pas neccessaire mais tu peux laisser
         $_SESSION['pass']    =  $resultat['pass'];

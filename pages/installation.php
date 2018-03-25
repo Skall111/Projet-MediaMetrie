@@ -576,18 +576,20 @@ foreach ($liste as $key => $value) {
                                onclick="document.location.href = 'detail_install.php?foyer=<?php echo $item['Id_foyer']; ?>' ">
                             </i>
                             <?php
-                            if($item['Pdf'] == 1){
-                                ?>
-                                <i class="fa fa-ban"
-                                   onclick="document.location.href = 'installation.php?no_valid=<?php echo $item['Id_foyer']; ?>' ">
-                                </i>
-                                <?php
-                            }else{
-                                ?>
-                                <i class="fa fa-check"
-                                   onclick="document.location.href = 'installation.php?valid=<?php echo $item['Id_foyer']; ?>' ">
-                                </i>
-                                <?php
+                            if($_SESSION['ADMIN'] == 1) {
+                                if ($item['Pdf'] == 1) {
+                                    ?>
+                                    <i class="fa fa-ban"
+                                       onclick="document.location.href = 'installation.php?no_valid=<?php echo $item['Id_foyer']; ?>' ">
+                                    </i>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <i class="fa fa-check"
+                                       onclick="document.location.href = 'installation.php?valid=<?php echo $item['Id_foyer']; ?>' ">
+                                    </i>
+                                    <?php
+                                }
                             }
                             ?>
 

@@ -248,11 +248,15 @@
                 </ul>
             </li>
                 <!-- /.nav-second-level -->
-            <li>
-                <a href="facture.php"><i class="fa fa-dashboard fa-fw"></i> Facture</a>
-            </li>
-            <li>
-
+            <?php
+            if($_SESSION['ADMIN'] == 1) {
+                ?>
+                <li>
+                    <a href="facture.php"><i class="fa fa-dashboard fa-fw"></i> Facture</a>
+                </li>
+                <?php
+            }
+?>
 
         </ul>
     </div>
