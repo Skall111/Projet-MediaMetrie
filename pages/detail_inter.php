@@ -3,7 +3,10 @@
 
 session_start();
 include '../php/Db.php';
-$directory = "C:/wamp64\/www/Projet-MediaMetrie/Files/";
+//$directory = "C:/wamp64\www/Projet-MediaMetrie/Files/";
+$directory = "/Applications/MAMP/htdocs/Projet-MediaMetrie/Files/";
+
+
 
 $Id_foyer = $_GET['foyer'];
 if(isset($_POST) && !empty($_POST)) {
@@ -17,13 +20,13 @@ $Peage = @$_POST['peage'];
 $Hotel = @$_POST['hotel'];
 $Autre = @$_POST['autre'];
 
-$string_req = 'UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 1, Id_type = 1, Detail = "'.$Kms_aller.'" WHERE Id_type = 1 AND Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 1, Id_type = 2, Detail = "'.$Id_type.'" WHERE Id_type = 2 AND Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 1, Id_type = 3, Detail = "'.$Detail.'" WHERE Id_type = 3 AND Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 1, Id_type = 4, Detail = "'.$Repas.'" WHERE Id_type = 4 AND Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 1, Id_type = 5, Detail = "'.$Peage.'" WHERE Id_type = 5 AND Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 1, Id_type = 6, Detail = "'.$Hotel.'" WHERE  Id_type = 6 AND Id_foyer = '.$_GET['foyer'].' ; 
-UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 1, Id_type = 7, Detail = "'.$Autre.'" WHERE Id_type = 7 AND Id_foyer = '.$_GET['foyer'].' ; ';
+$string_req = 'UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 2, Id_type = 1, Detail = "'.$Kms_aller.'" WHERE Id_type = 1 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 2, Id_type = 2, Detail = "'.$Id_type.'" WHERE Id_type = 2 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 2, Id_type = 3, Detail = "'.$Detail.'" WHERE Id_type = 3 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 2, Id_type = 4, Detail = "'.$Repas.'" WHERE Id_type = 4 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 2, Id_type = 5, Detail = "'.$Peage.'" WHERE Id_type = 5 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 2, Id_type = 6, Detail = "'.$Hotel.'" WHERE  Id_type = 6 AND Id_foyer = '.$_GET['foyer'].' ; 
+UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_type_install = 2, Id_type = 7, Detail = "'.$Autre.'" WHERE Id_type = 7 AND Id_foyer = '.$_GET['foyer'].' ; ';
 //echo $string_req ;
 $req = $bdd->prepare($string_req);
 $req->execute(array(
@@ -46,7 +49,7 @@ $req = $bdd->prepare($string_req);
 $req->execute(array(
     'Id_foyer' => $Id_foyer,
     'curdate' => $Current_date,
-    'Id_type_install' => '1',
+    'Id_type_install' => '0',
     'param' => $_GET['foyer']));
 
     /*
@@ -54,7 +57,7 @@ $req->execute(array(
      * */
     $file = $_FILES['file_kms_aller']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_kms_aller']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_kms_aller']['name'];
@@ -73,7 +76,7 @@ $req->execute(array(
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'curdate' => $Current_date,
-                'Id_type_inter' => '1',
+                'Id_type_inter' => '2',
                 'Name_files' => $_FILES['file_kms_aller']['name'],
                 'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
@@ -97,7 +100,7 @@ $req->execute(array(
  * */
     $file = $_FILES['file_repas']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_repas']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_repas']['name'];
@@ -116,7 +119,7 @@ $req->execute(array(
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'curdate' => $Current_date,
-                'Id_type_inter' => '1',
+                'Id_type_inter' => '2',
                 'Name_files' => $_FILES['file_repas']['name'],
                 'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
@@ -140,7 +143,7 @@ $req->execute(array(
  * */
     $file = $_FILES['file_peage']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_peage']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_peage']['name'];
@@ -159,7 +162,7 @@ $req->execute(array(
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'curdate' => $Current_date,
-                'Id_type_inter' => '1',
+                'Id_type_inter' => '2',
                 'Name_files' => $_FILES['file_peage']['name'],
                 'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
@@ -183,7 +186,7 @@ $req->execute(array(
  * */
     $file = $_FILES['file_hotel']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_hotel']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_hotel']['name'];
@@ -202,7 +205,7 @@ $req->execute(array(
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'curdate' => $Current_date,
-                'Id_type_inter' => '1',
+                'Id_type_inter' => '2',
                 'Name_files' => $_FILES['file_hotel']['name'],
                 'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
@@ -226,7 +229,7 @@ $req->execute(array(
  * */
     $file = $_FILES['file_autre']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_autre']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_autre']['name'];
@@ -245,7 +248,7 @@ $req->execute(array(
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'curdate' => $Current_date,
-                'Id_type_inter' => '1',
+                'Id_type_inter' => '2',
                 'Name_files' => $_FILES['file_autre']['name'],
                 'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
@@ -407,14 +410,14 @@ foreach ($Image as $item){
                                 <div class="form-group" >
                                     <label for="concept" class="col-sm-3 control-label">N°Foyer</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="foyer" name="foyer">
+                                        <input type="text" class="form-control" id="foyer" name="foyer" readonly value="<?php echo $foyer ; ?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group" >
                                     <label for="date" class="col-sm-3 control-label" style="padding-top: 0%">Date Intervention</label>
                                     <div class="col-sm-9">
-                                        <input type="date" class="form-control" id="date" name="date">
+                                        <input type="date" class="form-control" id="date" name="date" readonly value="<?php echo $date ; ?>">
                                     </div>
 
                                 </div>
@@ -422,9 +425,9 @@ foreach ($Image as $item){
                                 <div class="form-group" >
                                     <label for="description" class="col-sm-3 control-label">Kms aller</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="kms_aller" name="kms_aller">
+                                        <input type="text" class="form-control" id="kms_aller" name="kms_aller" value="<?php echo $kms ; ?>">
                                         <span>
-                                        <input type="file" class="form-control-file" id="file_kms_aller" name="file_temps_passe">
+                                        <input type="file" class="form-control-file" id="file_kms_aller" name="file_kms_aller">
                                 </span>
                                     </div>
                                 </div>
@@ -432,7 +435,7 @@ foreach ($Image as $item){
                                 <div class="form-group" >
                                     <label for="amount" class="col-sm-3 control-label" style="padding-top: 0%">Temps Passé </label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="temps_passe" name="temps_passe">
+                                        <input type="text" class="form-control" id="temps_passe" name="temps_passe" value="<?php echo $poste ; ?>">
                                     </div>
                                 </div>
                             </div>
@@ -447,7 +450,7 @@ foreach ($Image as $item){
                                 <div class="form-group" >
                                     <label for="concept" class="col-sm-3 control-label">Repas</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="repas" name="repas">
+                                        <input type="text" class="form-control" id="repas" name="repas" value="<?php echo $repas ; ?>">
                                         <span>
                                         <input type="file" class="form-control-file" id="fiche_repas" name="file_repas">
                                 </span>
@@ -457,7 +460,7 @@ foreach ($Image as $item){
                                 <div class="form-group" >
                                     <label for="description" class="col-sm-3 control-label">Péages</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="peage" name="peage">
+                                        <input type="text" class="form-control" id="peage" name="peage" value="<?php echo $peage ; ?>">
                                         <span>
                                         <input type="file" class="form-control-file" id="fiche_peage" name="file_peage">
                                 </span>
@@ -468,7 +471,7 @@ foreach ($Image as $item){
                                 <div class="form-group" >
                                     <label for="amount" class="col-sm-3 control-label">Hotels</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="hotel" name="hotel">
+                                        <input type="text" class="form-control" id="hotel" name="hotel" value="<?php echo $hotel ; ?>">
                                         <span>
                                         <input type="file" class="form-control-file" id="fiche_hotel" name="file_hotel">
                                 </span>
@@ -478,7 +481,7 @@ foreach ($Image as $item){
                                 <div class="form-group" >
                                     <label for="amount" class="col-sm-3 control-label">Autres</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="autre" name="autre">
+                                        <input type="text" class="form-control" id="autre" name="autre" value="<?php echo $autres ; ?>">
                                         <span>
                                         <input type="file" class="form-control-file" id="fiche_autre" name="file_autre">
                                 </span>
@@ -496,7 +499,106 @@ foreach ($Image as $item){
                 <button type="button" onclick="$('#form').submit();" class="btn btn-primary">Sauvegarder les changements</button>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-4 text-center" style="background-image: url('bg.jpg') ; height: 130px ; ">
+                <h3>Kms</h3>
+                <br>
+                <i class="fa fa-road" aria-hidden="true"></i>
+                <?php
+                if (isset($kms_image) && !empty($kms_image)) {
+                    ?>
+                    Fichier : <a target="_blank"
+                                 href="dl.php?chemin=<?php echo $kms_url  ; ?>&fichier=<?php echo $kms_image; ?>"><?php echo $kms_image; ?></a>
+                    <br>
+                    <a target="_blank"
+                       href="dl.php?supp=1&chemin=<?php echo $kms_url  ; ?>&fichier=<?php echo $kms_image; ?>"><i title="Supprimer !" class="fa fa-trash fa-2x">
+                        </i></a>
+                    <?php
+                }else{
+                    echo "Fichier : Aucun fichier trouvé";
+                }
+                ?>
 
+            </div>
+            <div class="col-sm-4 text-center" style="background-image: url('bg.jpg') ; height: 130px ; ">
+                <h3>Repas</h3>
+                <br>
+                <i class="fa fa-cutlery" aria-hidden="true"></i>
+                <?php
+                if (isset($repas_image) && !empty($repas_image)) {
+                    ?>
+                    Fichier : <a target="_blank"
+                                 href="dl.php?chemin=<?php echo $repas_url  ; ?>&fichier=<?php echo $repas_image; ?>"><?php echo $repas_image; ?></a>
+                    <a target="_blank"
+                       href="dl.php?supp=1&chemin=<?php echo $repas_url  ; ?>&fichier=<?php echo $repas_image; ?>"><i title="Supprimer !" class="fa fa-trash fa-2x">
+                        </i></a>
+                    <?php
+                }else{
+                    echo  "Fichier : Aucun fichier trouvé";
+                }
+                ?>
+
+            </div>
+            <div class="col-sm-4 text-center" style="background-image: url('bg.jpg') ; height: 130px ; ">
+                <h3>Peage</h3>
+                <br>
+                <i class="fa fa-ticket" aria-hidden="true"></i>
+                <?php
+                if (isset($peage_image) && !empty($peage_image)) {
+                    ?>
+                    Fichier : <a target="_blank"
+                                 href="dl.php?chemin=<?php echo $peage_url  ;?>&fichier=<?php echo $peage_image; ?>"><?php echo $peage_image; ?></a>
+                    <a target="_blank"
+                       href="dl.php?supp=1&chemin=<?php echo $peage_url  ; ?>&fichier=<?php echo $peage_image; ?>"><i title="Supprimer !" class="fa fa-trash fa-2x">
+                        </i></a>
+                    <?php
+                }else{
+                    echo  "Fichier : Aucun fichier trouvé";
+                }
+                ?>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 text-center" style="background-image: url('bg.jpg') ; height: 130px ; ">
+                <h3>Hotel</h3>
+                <br>
+                <i class="fa fa-bed" aria-hidden="true"></i>
+                <?php
+                if (isset($hotel_image) && !empty($hotel_image)) {
+                    ?>
+                    Fichier : <a target="_blank"
+                                 href="dl.php?chemin=<?php echo $hotel_url  ; ?>&fichier=<?php echo $hotel_image; ?>"><?php echo $hotel_image; ?></a>
+                    <a target="_blank"
+                       href="dl.php?supp=1&chemin=<?php echo $hotel_url  ; ?>&fichier=<?php echo $hotel_image; ?>"><i title="Supprimer !" class="fa fa-trash fa-2x">
+                        </i></a>
+                    <?php
+                }else{
+                    echo  "Fichier : Aucun fichier trouvé";
+                }
+                ?>
+            </div>
+            <div class="col-sm-6 text-center" style="background-image: url('bg.jpg') ; height: 130px ; ">
+                <h3>Autres</h3>
+                <br>
+                <i class="fa fa-list" aria-hidden="true"></i>
+                <?php
+                if (isset($autres_image) && !empty($autres_image)) {
+                    ?>
+                    Fichier : <a target="_blank"
+                                 href="dl.php?chemin=<?php echo $autres_url  ; ?>&fichier=<?php echo $autres_image; ?>"><?php echo $autres_image; ?></a>
+                    <a target="_blank"
+                       href="dl.php?supp=1&chemin=<?php echo $autres_url  ; ?>&fichier=<?php echo $autres_image; ?>"><i title="Supprimer !" class="fa fa-trash fa-2x">
+                        </i></a>
+                    <?php
+                }else{
+                    echo "Fichier : Aucun fichier trouvé";
+                }
+                ?>
+
+            </div>
+
+        </div>
 
 
 

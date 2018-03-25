@@ -27,7 +27,7 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
     $req->execute(array(
         'Id_foyer' => $Id_foyer,
         'curdate' => $Current_date,
-        'Id_type_install' => '1',
+        'Id_type_install' => '2',
         'Id_type' => $Id_type,
         'Detail' => $Detail,
         'Kms_aller' => $Kms_aller,
@@ -44,14 +44,14 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
     $req->execute(array(
         'Id_foyer' => $Id_foyer,
         'curdate' => $Current_date,
-        'Id_type_install' => '1',
+        'Id_type_install' => '0',
         'param' => $_GET['foyer']));
 /*
  * PEITI JUIF
  * */
     $file = $_FILES['file_kms_aller']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_kms_aller']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_kms_aller']['name'];
@@ -70,7 +70,7 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'curdate' => $Current_date,
-                'Id_type_inter' => '1',
+                'Id_type_inter' => '2',
                 'Name_files' => $_FILES['file_kms_aller']['name'],
                 'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
@@ -94,7 +94,7 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
  * */
     $file = $_FILES['file_repas']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_repas']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_repas']['name'];
@@ -113,7 +113,7 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'curdate' => $Current_date,
-                'Id_type_inter' => '1',
+                'Id_type_inter' => '2',
                 'Name_files' => $_FILES['file_repas']['name'],
                 'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
@@ -137,7 +137,7 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
  * */
     $file = $_FILES['file_peage']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_peage']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_peage']['name'];
@@ -156,7 +156,7 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'curdate' => $Current_date,
-                'Id_type_inter' => '1',
+                'Id_type_inter' => '2',
                 'Name_files' => $_FILES['file_peage']['name'],
                 'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
@@ -180,7 +180,7 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
  * */
     $file = $_FILES['file_hotel']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_hotel']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_hotel']['name'];
@@ -223,7 +223,7 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
  * */
     $file = $_FILES['file_autre']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_autre']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_autre']['name'];
@@ -242,7 +242,7 @@ UPDATE details SET Id_foyer = '.$Id_foyer.' , Id_date = "'.$Current_date.'", Id_
             $req->execute(array(
                 'Id_foyer' => $Id_foyer,
                 'curdate' => $Current_date,
-                'Id_type_inter' => '1',
+                'Id_type_inter' => '2',
                 'Name_files' => $_FILES['file_autre']['name'],
                 'Files_chemin' => $directory . $Id_foyer.'_'.$Current_date));
 
@@ -410,7 +410,7 @@ foreach ($Image as $item){
                                     <label for="date" class="col-sm-3 control-label"
                                            style="padding-top: 0%">Date Intervention</label>
                                     <div class="col-sm-9">
-                                        <input type="date" class="form-control" id="date"
+                                        <input type="date" class="form-control" readonly id="date"
                                                name="date" value="<?php echo $date ;?>">
                                     </div>
 

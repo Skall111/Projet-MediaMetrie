@@ -26,6 +26,18 @@ if(!isset($_SESSION['id'])){
 
 
 include '../php/Db.php';
+
+if(isset($_GET['valid'])){
+    $req = $bdd->prepare('UPDATE facture SET Id_type_inter = 1 WHERE Id_foyer = :Id_foyer LIMIT 1 ');
+    $req->execute(array(
+        'Id_foyer' => $_GET['valid']));
+}
+if(isset($_GET['no_valid'])){
+    $req = $bdd->prepare('UPDATE facture SET Id_type_inter = 0 WHERE Id_foyer = :Id_foyer LIMIT 1 ');
+    $req->execute(array(
+        'Id_foyer' => $_GET['no_valid']));
+}
+
 if (isset($_GET['supp'])) {
     $req = $bdd->prepare('DELETE FROM facture  WHERE Id_foyer = :Id_foyer LIMIT 1 ');
     $req->execute(array(
@@ -91,7 +103,7 @@ if (isset ($_POST) && !empty($_POST)) {
     $req->execute(array(
         'Id_foyer' => $Id_foyer,
         'curdate' => $Current_date,
-        'Id_type_inter' => '1'));
+        'Id_type_inter' => '0'));
 
 
 
@@ -104,7 +116,7 @@ if (isset ($_POST) && !empty($_POST)) {
 
     $file = $_FILES['file_kms_aller']['tmp_name'];
     if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-        mkdir($directory . $Id_foyer.'_'.$Current_date);
+        mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
     }
     if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_kms_aller']['name'])) {
         echo "Impossible de copier le fichier dans" . $directory;
@@ -134,7 +146,7 @@ if (isset ($_POST) && !empty($_POST)) {
 
 $file = $_FILES['file_repas']['tmp_name'];
 if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-    mkdir($directory . $Id_foyer.'_'.$Current_date);
+    mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
 }
 if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_repas']['name'])) {
     echo "Impossible de copier le fichier dans" . $directory;
@@ -165,7 +177,7 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$
 
 $file = $_FILES['file_peage']['tmp_name'];
 if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-    mkdir($directory . $Id_foyer.'_'.$Current_date);
+    mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
 }
 if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_peage']['name'])) {
     echo "Impossible de copier le fichier dans" . $directory;
@@ -192,7 +204,7 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$
 
 $file = $_FILES['file_hotel']['tmp_name'];
 if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-    mkdir($directory . $Id_foyer.'_'.$Current_date);
+    mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
 }
 if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_hotel']['name'])) {
     echo "Impossible de copier le fichier dans" . $directory;
@@ -222,7 +234,7 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$
 
 $file = $_FILES['file_autre']['tmp_name'];
 if (!file_exists($directory . $Id_foyer.'_'.$Current_date)) { // Si le dossier n'existe pas on le crée avec l'id du foyer qui est censé etre unique
-    mkdir($directory . $Id_foyer.'_'.$Current_date);
+    mkdir($directory . $Id_foyer.'_'.$Current_date , 777);
 }
 if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$_FILES['file_autre']['name'])) {
     echo "Impossible de copier le fichier dans" . $directory;
@@ -253,10 +265,13 @@ if (!move_uploaded_file($file, $directory . $Id_foyer . '_'.$Current_date .'/'.$
 
 
 // je prend tout de detail en les rangé pas ordre decroissant par Id_date
-$reqListe = $bdd->query("SELECT * FROM details  WHERE Id_type_install = '1' ORDER BY Id_date DESC");
+$reqListe = $bdd->query("SELECT * FROM details LEFT JOIN facture ON details.Id_foyer = facture.Id_foyer WHERE Id_type_install = '1' ORDER BY details.Id_date DESC");
 $liste = $reqListe->fetchAll();
 
+
+
 foreach ($liste as $key => $value) {
+    $liste[$value['Id_foyer']]['Pdf'] = $value['Id_type_inter'];
     $liste[$value['Id_foyer']]['Id_foyer'] = $value['Id_foyer'];
     $liste[$value['Id_foyer']]['Id_date'] = $value['Id_date'];
     $liste[$value['Id_foyer']]['Id_type_install'] = $value['Id_type_install'];
@@ -556,12 +571,25 @@ foreach ($liste as $key => $value) {
                         <td><?php echo $item['Autre']; ?></td>
                         <td><i class="fa fa-trash"
                                onclick="document.location.href = 'installation.php?supp=<?php echo $item['Id_foyer']; ?>' ">
-
                             </i>
                             <i class="fa fa-edit"
                                onclick="document.location.href = 'detail_install.php?foyer=<?php echo $item['Id_foyer']; ?>' ">
-
                             </i>
+                            <?php
+                            if($item['Pdf'] == 1){
+                                ?>
+                                <i class="fa fa-ban"
+                                   onclick="document.location.href = 'installation.php?no_valid=<?php echo $item['Id_foyer']; ?>' ">
+                                </i>
+                                <?php
+                            }else{
+                                ?>
+                                <i class="fa fa-check"
+                                   onclick="document.location.href = 'installation.php?valid=<?php echo $item['Id_foyer']; ?>' ">
+                                </i>
+                                <?php
+                            }
+                            ?>
 
                         </td>
 
