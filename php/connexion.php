@@ -3,7 +3,7 @@ session_start();
 //  Récupération de l'utilisateur et de son pass hashé
 include ('Db.php');
 if(isset($_POST) && !empty($_POST)){
-$req = $bdd->prepare('SELECT id , pass , prenom_amba FROM compte WHERE id = :id AND pass  = :pass');
+$req = $bdd->prepare('SELECT id , pass , prenom_amba , admin FROM compte WHERE id = :id AND pass  = :pass');
     // invzlid parametre si tu te connecet eavec l'id et le pass
     // dans les param ci dessous tu as mis id = qq chose
     // et pass = qq chose
@@ -31,9 +31,9 @@ if (!$resultat)
 else
 {
     if($resultat['admin'] == 1){
-        $_SESSION['ADMIN'] == 1 ;
+        $_SESSION['ADMIN'] = 1 ;
     }else{
-        $_SESSION['ADMIN'] == 0 ;
+        $_SESSION['ADMIN'] = 0 ;
     }
         $_SESSION['id'] = $resultat['id'];// La je mets l'id dasn la varible (recuperable depuis toute les pages ) $_SESSION au rang 'id'
         $_SESSION['prenom_amba'] = $resultat['prenom_amba'];//Pas neccessaire mais tu peux laisser

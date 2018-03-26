@@ -1,5 +1,23 @@
 <?php
 session_start();
+if(!isset($_SESSION['id'])){
+    header('Location: ../php/connexion.php');
+    exit;
+}
+include '../php/Db.php';
+$last = date('Y-m-d' , strtotime('-30 days'));
+$today = date('Y-m-d' , strtotime(('+1 days')));
+//echo $last ;
+//echo $today ;
+$install = "SELECT COUNT(DISTINCT Id_foyer) AS INSTALLATION FROM details WHERE Id_type_install = 1 AND  Id_date <= '".$last."' AND Id_date >= '".$today."'" ;
+$req1 = $bdd->query($install)->fetch();
+$inter = "SELECT COUNT(DISTINCT Id_foyer) AS INTERVENTION FROM details WHERE Id_type_install = 2 AND Id_date <= '".$last."' AND Id_date >= '".$today."'" ;
+$req2 = $bdd->query($inter)->fetch();
+$incomplet = 'SELECT COUNT(Id_foyer) AS INCOMPLET FROM details WHERE Detail= "" OR Detail = " " OR Detail = 0 ' ;
+$req3 = $bdd->query($incomplet)->fetch();
+$facture = 'SELECT COUNT(DISTINCT Id_foyer) AS FACTURE FROM facture WHERE Id_type_inter= 1 ' ;
+$req4 = $bdd->query($facture)->fetch();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,7 +85,7 @@ session_start();
                                     <i class="fa fa-comments fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">26</div>
+                                    <div class="huge"><?php echo $req1['INSTALLATION']; ?></div>
                                     <div>Nombre d'installation</div>
                                 </div>
                             </div>
@@ -89,7 +107,7 @@ session_start();
                                     <i class="fa fa-tasks fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">12</div>
+                                    <div class="huge"><?php echo $req2['INTERVENTION']; ?></div>
                                     <div>Nombre d'intervention</div>
                                 </div>
                             </div>
@@ -111,7 +129,7 @@ session_start();
                                     <i class="fa fa-shopping-cart fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">124</div>
+                                    <div class="huge"><?php echo $req3['INCOMPLET']; ?></div>
                                     <div>Fiches incomplètes</div>
                                 </div>
                             </div>
@@ -133,8 +151,8 @@ session_start();
                                     <i class="fa fa-support fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">13</div>
-                                    <div>Message de l'Admin</div>
+                                    <div class="huge"><?php echo $req4['FACTURE']; ?></div>
+                                    <div>Fiches facturées</div>
                                 </div>
                             </div>
                         </div>
