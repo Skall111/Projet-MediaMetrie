@@ -125,7 +125,7 @@ foreach ($liste as $key => $value) {
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Generer vos factures </h1>
+            <h1 class="page-header">Générer vos factures </h1>
         </div>
         <!-- /.col-lg-12
 
@@ -187,8 +187,8 @@ foreach ($liste as $key => $value) {
 
                             ?>
                         </td>
-                        <td><?php echo $item['Kms_aller'] * 1,25; ?></td>
-                        <td><?php echo $item['Nb_Poste'] * 1; ?></td>
+                        <td><?php echo $item['Kms_aller'] * 1,25 ; ?></td>
+                        <td><?php echo $item['Nb_Poste'] * 1 ; ?></td>
                         <td><?php echo $item['Repas'] * 3 ; ?></td>
                         <td><?php echo $item['Peage'] * 4; ?></td>
                         <td><?php echo $item['Hotel'] * 5; ?></td>

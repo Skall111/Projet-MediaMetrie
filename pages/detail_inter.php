@@ -4,7 +4,7 @@
 session_start();
 include '../php/Db.php';
 //$directory = "C:/wamp64\www/Projet-MediaMetrie/Files/";
-$directory = "/Applications/MAMP/htdocs/Projet-MediaMetrie/Files/";
+$directory = "C:/wamp64/www/Projet-MediaMetrie/Files/";
 
 
 

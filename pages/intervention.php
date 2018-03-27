@@ -4,7 +4,7 @@ session_start();
 //echo $_SESSION['prenom_amba'];// Afficher le prénom de l'ambassaeur
 //var_dump($_POST);
 //$directory = "C:/wamp64\www/Projet-MediaMetrie/Files/";
-$directory = "/Applications/MAMP/htdocs/Projet-MediaMetrie/Files/";
+$directory = "C:/wamp64/www/Projet-MediaMetrie/Files/";
 
 include '../php/Db.php';
 // Insertion du bouton supprimer dans mon tableau
